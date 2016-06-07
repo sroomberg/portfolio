@@ -48,3 +48,8 @@ Temporary Items
 
 # Miscellaneous
 scratchpad.txt
+package.json
+Gruntfile.js
+npm*
+node*
+node_modules/*
