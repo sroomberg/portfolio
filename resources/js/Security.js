@@ -5,6 +5,7 @@ function Security(ticker) {
 	this.totalSale = 0.0;
 	this.dividends = 0.0;
 	this.currentPrice = 0.0;
+	this.transactionList = [];
 
 	var security = require('yahoo-finance-stream')({ frequency: 5000 });
 	
