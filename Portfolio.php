@@ -1,4 +1,5 @@
 <?php
+require 'Security.php';
 require 'resources/yahoo-finance-api/lib/YahooFinance/YahooFinance.php';
 global $yahoo_finance = new YahooFinance;
 
