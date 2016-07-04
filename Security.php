@@ -3,7 +3,6 @@
 public class Security {
     private $ticker;
     private $shares_owned;
-    private $current_price;
     private $cost_basis;
     private $total_sale;
     private $dividends;
@@ -12,7 +11,6 @@ public class Security {
     public function __construct($a_ticker) {
         $this->ticker = $a_ticker;
         $this->shares_owned = 0;
-        $this->current_price = 0.0;
         $this->cost_basis = 0.0;
         $this->total_sale = 0.0;
         $this->dividends = array();
@@ -35,14 +33,6 @@ public class Security {
         $order->date = $date;
         $order->amount = $amount;
         array_push($dividends, $order);
-    }
-
-    public function calculate_gain() {
-
-    }
-
-    public function calculate_recogized_gain() {
-
     }
 
     private class Transaction {
