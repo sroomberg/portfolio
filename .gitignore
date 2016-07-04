@@ -48,6 +48,8 @@ Temporary Items
 
 # Miscellaneous
 scratchpad.txt
+cash.json
+transactions.json
 package.json
 Gruntfile.js
 npm*
