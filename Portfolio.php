@@ -52,12 +52,19 @@ public class Portfolio {
         }
     }
 
-    public function get_current_price() {
-        // get current prices of all positions
+    public function get_current_price($ticker) {
+        if (array_key_exists($ticker, $this->securities)) {
+            $quote = json_decode($yahoo_finance->getQuotes([$ticker]));
+            return ($this->securities[$ticker]->current_price = number_format((float) $quote->query->results->quote->LastTradePriceOnly, 2, '.', ''));
+        }
     }
 
-    public function get_current_price($ticker) {
-        if (array_key_exists($ticker, ))
+    public function update_current_prices() {
+        // get current prices of all positions
+        $quote = json_decode($yahoo_finance->getQuotes(array_keys($this->securities)));
+        foreach($quote->query->results->quote as $stock) {
+            $this->securities[$ticker]->current_price = number_format((float) $stock->LastTradePriceOnly, 2, '.', '');
+        }
     }
 
     public function calculate_gain() {
@@ -80,6 +87,8 @@ public class Portfolio {
         }
     }
 
+    // returns -1 if there's an error, 0 if the database had to be created, and 1
+    // if the database existed already.
     private function connect($link) {
         if (!$link) {
             die('Connection Failed: ' . mysql_error());

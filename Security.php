@@ -8,6 +8,8 @@ public class Security {
     private $dividends;
     private $transactions;
 
+    public $current_price;
+
     public function __construct($a_ticker) {
         $this->ticker = $a_ticker;
         $this->shares_owned = 0;
@@ -15,6 +17,7 @@ public class Security {
         $this->total_sale = 0.0;
         $this->dividends = array();
         $this->transactions = array();
+        $this->current_price = 0.0;
     }
 
     public function order($trans_type, $date, $num_shares, $share_price, $commission) {
