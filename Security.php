@@ -3,12 +3,14 @@
 public class Security {
     private $ticker;
     private $shares_owned;
+    private $shares_sold;
     private $cost_basis;
     private $total_sale;
     private $dividends;
     private $transactions;
 
     public $current_price;
+    public $recognized_gain;
 
     public function __construct($a_ticker) {
         $this->ticker = $a_ticker;
@@ -18,6 +20,7 @@ public class Security {
         $this->dividends = array();
         $this->transactions = array();
         $this->current_price = 0.0;
+        $this->recognized_gain = 0.0;
     }
 
     public function order($trans_type, $date, $num_shares, $share_price, $commission) {
@@ -28,6 +31,30 @@ public class Security {
         $order->amount = $share_price * $num_shares;
         $order->commission = $commission;
         array_push($transactions, $order);
+
+        if ($type == 'BUY') {
+            $this->cost_basis += ($order->amount + $commission);
+            $this->shares_owned += $num_shares;
+        }
+        elseif ($type == 'SELL') {
+            $this->total_sale += ($order->amount + $commission);
+            $this->shares_owned -= $num_shares;
+            $this->shares_sold += $num_shares;
+
+            $counter = 0;
+            $recognized_amount = 0.0;
+            foreach ($this->transactions as $transaction) {
+                if (strcmp($transaction->type, 'BUY') == 0) {
+                    if ($counter == $this->shares_sold) {
+                        break;
+                    }
+
+                    $counter += $transaction->num_shares;
+                    $recognized_amount += $transaction->num_shares * $transaction->amount;
+                }
+            }
+            $this->recognized_gain = $recognized_amount;
+        }
     }
 
     public function dividend($date, $amount) {
