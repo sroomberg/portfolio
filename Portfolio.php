@@ -24,7 +24,7 @@ public class Portfolio {
             $this->total_balance = $this->cash + $this->securities_balance;
         }
         elseif ($conn == 1) {
-            // data already exists in db so you need to parse through needed data
+            // tables already exists in db so you need to parse through needed data
         }
     }
 
@@ -156,7 +156,7 @@ public class Portfolio {
         mysql_close($this->cxn);
     }
 
-    private function string_to_date($date_str) {
+    private function parse_string_to_date($date_str) {
         // parses string date variable to date object to be used when committing to db
         // returns date object
     }
