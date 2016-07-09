@@ -8,7 +8,6 @@ public class Portfolio {
     private final $db_uname = 'root';
     private final $db_pwd = 'root';
     private final $db_name = 'portfolio';
-    private final $cxn = new mysqli($db_host, $db_uname, $db_pwd);
 
     public $cash;
     public $securities;
@@ -16,20 +15,14 @@ public class Portfolio {
     public $total_balance;
 
     public function __construct() {
+        $cxn = new mysqli($db_host, $db_uname, $db_pwd);
         if ($cnx->connect_error) {
             die('Connection Failed: ' . $cxn->connect_error);
         }
 
-        if () {
-            $this->cash = 0.0;
-            $this->securities = array();
-            $this->securities_balance = 0.0;
-            $this->total_balance = $this->cash + $this->securities_balance;
-        }
-        else {
-            // tables already exists in db so you need to parse through needed data
-            
-        }
+        // create DB if not exists and parse through all data (if any)
+        $cxn->query('CREATE DATABASE IF NOT EXISTS MyAccount');
+
     }
 
     public function credit($amount) {
@@ -117,8 +110,7 @@ public class Portfolio {
     }
 
     private function on_exit() {
-        // commit everything to database
-        mysql_close($this->cxn);
+        // commit everything to database and kill connection
     }
 
     private function parse_string_to_date($date_str) {
