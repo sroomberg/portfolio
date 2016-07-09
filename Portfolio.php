@@ -8,7 +8,7 @@ public class Portfolio {
     private final $db_uname = 'root';
     private final $db_pwd = 'root';
     private final $db_name = 'portfolio';
-    private final $cxn = new mysql_connect($db_host, $db_uname, $db_pwd);
+    private final $cxn = new mysqli($db_host, $db_uname, $db_pwd);
 
     public $cash;
     public $securities;
@@ -16,15 +16,19 @@ public class Portfolio {
     public $total_balance;
 
     public function __construct() {
-        $conn = $this->connect($cxn);
-        if ($conn == 0) {
+        if ($cnx->connect_error) {
+            die('Connection Failed: ' . $cxn->connect_error);
+        }
+
+        if () {
             $this->cash = 0.0;
             $this->securities = array();
             $this->securities_balance = 0.0;
             $this->total_balance = $this->cash + $this->securities_balance;
         }
-        elseif ($conn == 1) {
+        else {
             // tables already exists in db so you need to parse through needed data
+            
         }
     }
 
@@ -110,45 +114,6 @@ public class Portfolio {
         if (array_key_exists($ticker, $this->securities)) {
             return $this->securities[$ticker]->recognized_gain;
         }
-    }
-
-    // returns -1 if there's an error, 0 if the database had to be created, and 1
-    // if the database existed already.
-    private function connect($link) {
-        if (!$link) {
-            die('Connection Failed: ' . mysql_error());
-            return -1;
-        }
-
-        $selected_db = mysql_select_db($db_name, $link);
-        if (!$selected_db) {
-            $mysql = 'CREATE DATABASE ' . $db_name;
-            if (!mysql_query($mysql, $link)) {
-                echo 'Error creating databse: ' . mysql_error() . '\n';
-                return -1;
-            }
-
-            $mysql = 'CREATE TABLE Securities (
-                ticker VARCHAR(30) NOT NULL PRIMARY KEY,
-                current_balance FLOAT NOT NULL
-            )';
-            if (!mysql_query($mysql, $link)) {
-                echo 'Error creating Securities table: ' . mysql_error() . '\n';
-                return -1;
-            }
-
-            $mysql = 'CREATE TABLE Portfolio (
-                cash_balance FLOAT,
-                securities_balance FLOAT,
-                total_balance FLOAT
-            )';
-            if (!mysql_query($mysql, $link)) {
-                echo 'Error creating Portfolio table: ' . mysql_error() . '\n';
-                return -1;
-            }
-            return 0;
-        }
-        return 1;
     }
 
     private function on_exit() {
