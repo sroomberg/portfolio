@@ -47,20 +47,21 @@ public class Portfolio {
         }
     }
 
-    public function get_current_price($ticker) {
-        if (array_key_exists($ticker, $this->securities)) {
-            $quote = json_decode($yahoo_finance->getQuotes([$ticker]));
-            return ($this->securities[$ticker]->current_price = number_format((float) $quote->query->results->quote->LastTradePriceOnly, 2, '.', ''));
-        }
-        return 0.0;
-    }
+    // functionality for live quote updates -- not using this in this version
+    // public function get_current_price($ticker) {
+    //     if (array_key_exists($ticker, $this->securities)) {
+    //         $quote = json_decode($yahoo_finance->getQuotes([$ticker]));
+    //         return ($this->securities[$ticker]->current_price = number_format((float) $quote->query->results->quote->LastTradePriceOnly, 2, '.', ''));
+    //     }
+    //     return 0.0;
+    // }
 
-    public function update_current_prices() {
-        $quote = json_decode($yahoo_finance->getQuotes(array_keys($this->securities)));
-        foreach($quote->query->results->quote as $stock) {
-            $this->securities[$ticker]->current_price = number_format((float) $stock->LastTradePriceOnly, 2, '.', '');
-        }
-    }
+    // public function update_current_prices() {
+    //     $quote = json_decode($yahoo_finance->getQuotes(array_keys($this->securities)));
+    //     foreach($quote->query->results->quote as $stock) {
+    //         $this->securities[$ticker]->current_price = number_format((float) $stock->LastTradePriceOnly, 2, '.', '');
+    //     }
+    // }
 
     public function calculate_gain($include_dividends) {
         $ret = 0.0;

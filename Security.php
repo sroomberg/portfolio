@@ -1,14 +1,13 @@
 <?php
 
 public class Security {
-    private $ticker;
-    private $shares_owned;
-    private $shares_sold;
-    private $cost_basis;
-    private $total_sale;
-    private $dividends;
-    private $transactions;
-
+    public $ticker;
+    public $shares_owned;
+    public $shares_sold;
+    public $cost_basis;
+    public $total_sale;
+    public $dividends;
+    public $transactions;
     public $current_price;
     public $recognized_gain;
 
@@ -63,6 +62,22 @@ public class Security {
         $order->date = $date;
         $order->amount = $amount;
         array_push($dividends, $order);
+    }
+
+    public function get_dividend_total() {
+        $ret = 0.0;
+        foreach($this->dividends as $div_order) {
+            $ret += $div_order->amount;
+        }
+        return $ret;
+    }
+
+    public function set_current_price($amount) {
+        $this->current_price = $amount;
+    }
+
+    public function get_value() {
+        return ($this->shares_sold * $this->$current_price);
     }
 
     // Used to write information to a txt file to save information for later
