@@ -1,9 +1,12 @@
 <?php
 require 'Portfolio.php';
-global $my_portfolio = new Portfolio;
+global $my_portfolio = new Portfolio();
 ?>
 
 <html>
+<style type="text/css">
+	#securities_table { text-align: center; };
+</style>
 <head>
 	<!--Bootstrap CSS--><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 	<link rel="stylesheet" href="resources/style.css">
@@ -11,8 +14,21 @@ global $my_portfolio = new Portfolio;
 </head>
 <body>
 	<div class="container">
-		<div class="col-md-2"></div>
-		<div class="col-md-8"></div>
+		<div class="col-md-2">
+			<h3>Cash Balance: <?php echo($my_portfolio->$cash); ?></h3>
+		</div>
+		<div class="col-md-8">
+			<div id="securites_table">
+				<div class="col-md-2" id="ticker">Ticker</div>
+				<div class="col-md-2" id="dividends">Dividends</div>
+				<div class="col-md-2" id="units_owned">Units Owned</div>
+				<div class="col-md-2" id="unit_price">Unit Price</div>
+				<div class="col-md-2" id="total_value">Total Value</div>
+				<div class="col-md-2" id="total_gain">Total Gain</div>
+				<hr />
+				<?php?>
+			</div>
+		</div>
 		<div class="col-md-2"></div>
 	</div>
 	<!--jQuery--><script src="https://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>

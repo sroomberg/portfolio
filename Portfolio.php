@@ -1,13 +1,7 @@
 <?php
 require 'Security.php';
-require 'resources/yahoo-finance-api/lib/YahooFinance/YahooFinance.php';
-global $yahoo_finance = new YahooFinance;
 
 public class Portfolio {
-    private final $db_host = '127.0.0.1';
-    private final $db_uname = 'root';
-    private final $db_pwd = 'root';
-    private final $db_name = 'portfolio';
 
     public $cash;
     public $securities;
@@ -15,14 +9,17 @@ public class Portfolio {
     public $total_balance;
 
     public function __construct() {
-        $cxn = new mysqli($db_host, $db_uname, $db_pwd);
-        if ($cnx->connect_error) {
-            die('Connection Failed: ' . $cxn->connect_error);
+        echo(
+            "<script type='text/javascript'>
+                var cash_balance = prompt('Please enter a starting balance (default value is $10,000):');
+            </script>
+        ");
+        $cash_balance = "<script type='text/javascript'> document.write(cash_balance); </script>";
+
+        if ($cash_balance == 0.0 || is_null($cash_balance)) {
+            $cash_balance = 10000;
         }
-
-        // create DB if not exists and parse through all data (if any)
-        $cxn->query('CREATE DATABASE IF NOT EXISTS MyAccount');
-
+        $this->credit($cash_balance);
     }
 
     public function credit($amount) {
@@ -107,15 +104,6 @@ public class Portfolio {
         if (array_key_exists($ticker, $this->securities)) {
             return $this->securities[$ticker]->recognized_gain;
         }
-    }
-
-    private function on_exit() {
-        // commit everything to database and kill connection
-    }
-
-    private function parse_string_to_date($date_str) {
-        // parses string date variable to date object to be used when committing to db
-        // returns date object
     }
 
 }

@@ -65,6 +65,18 @@ public class Security {
         array_push($dividends, $order);
     }
 
+    // Used to write information to a txt file to save information for later
+    // public function to_string() {
+    //     $ret = '';
+    //     $ret .= $this->ticker;
+    //     $ret .= '\n';
+    //     $ret .= $this->$shares_owned . ' ' . $this->$shares_sold . ' ' . $this->$cost_basis . ' ' . 
+    //             $this->$total_sale . ' ' . $this->$current_price . ' ' . $this->$recognized_gain . '\n';
+    //     $ret .= $dividends;
+    //     $ret .= '\n***\n';
+    //     return $ret;
+    // }
+
     private class Transaction {
         public $type;       // String BUY, SELL, DIV
         public $date;       // String date variable
