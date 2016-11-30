@@ -73,6 +73,9 @@ public class Security {
     }
 
     public function set_current_price($amount) {
+        if ($amount < 0.0) {
+            $amount = 0.0;
+        }
         $this->current_price = $amount;
     }
 

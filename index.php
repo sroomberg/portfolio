@@ -50,7 +50,12 @@ global $my_portfolio = new Portfolio();
 				foreach ($my_portfolio->securites as $position) {
 					?><div class"col-md-2"><?php echo($position->$ticker); ?></div><?php
 					?><div class"col-md-2"><?php echo($position->get_dividend_total()); ?></div><?php
-					?><div class"col-md-2"><?php echo($position->$current_price); ?></div><?php
+					?><div class"col-md-2">
+						<form method="post" id="current_price_form">
+							<input type="number" name="curr_price">
+						</form>
+						<?php if (isset($_POST['curr_price'])) $position->set_current_price($_POST['curr_price']); ?>
+					</div><?php
 					?><div class"col-md-2"><?php echo($position->get_value()); ?></div><?php
 					?><div class"col-md-2"><?php echo($my_portfolio->calulate_gain($position->$ticker, TRUE)); ?></div><?php
 				}
