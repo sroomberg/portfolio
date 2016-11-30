@@ -46,8 +46,7 @@ global $my_portfolio = new Portfolio();
 				<div class="col-md-2">Total Value</div>
 				<div class="col-md-2">Total Gain</div>
 				<hr />
-				<?php
-				foreach ($my_portfolio->securites as $position) {
+				<?php foreach ($my_portfolio->securites as $position) {
 					?><div class"col-md-2"><?php echo($position->$ticker); ?></div><?php
 					?><div class"col-md-2"><?php echo($position->get_dividend_total()); ?></div><?php
 					?><div class"col-md-2">
@@ -58,8 +57,7 @@ global $my_portfolio = new Portfolio();
 					</div><?php
 					?><div class"col-md-2"><?php echo($position->get_value()); ?></div><?php
 					?><div class"col-md-2"><?php echo($my_portfolio->calulate_gain($position->$ticker, TRUE)); ?></div><?php
-				}
-				?>
+				} ?>
 				<hr />
 				<form method="post" id="securites_form">
 					<div id="securites_form_opt">Type:<br />
