@@ -1,5 +1,6 @@
 <?php
 session_start();
+// session_unset();
 require 'Portfolio.php';
 
 if (isset($_SESSION['my_portfolio'])) {

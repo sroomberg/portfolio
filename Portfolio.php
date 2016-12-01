@@ -17,7 +17,6 @@ class Portfolio {
             ");
             $cash_balance = "<script type='text/javascript'> document.write(cash_balance); </script>";
             $cash_balance = (float) $cash_balance;
-
             if ($cash_balance == 0.0 || is_null($cash_balance)) {
                 $cash_balance = 10000.0;
             }
