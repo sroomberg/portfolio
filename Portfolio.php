@@ -1,23 +1,26 @@
 <?php
 require 'Security.php';
 
-public class Portfolio {
+class Portfolio {
 
     public $cash;
     public $securities;
     public $securities_balance;
     public $total_balance;
 
-    public function __construct() {
-        echo(
-            "<script type='text/javascript'>
-                var cash_balance = prompt('Please enter a starting balance (default value is $10,000):');
-            </script>
-        ");
-        $cash_balance = "<script type='text/javascript'> document.write(cash_balance); </script>";
+    public function __construct($cash_amount = NULL) {
+        if (is_null($cash_amount)) {
+            echo(
+                "<script type='text/javascript'>
+                    var cash_balance = prompt('Please enter a starting balance (default value is $10,000):');
+                </script>
+            ");
+            $cash_balance = "<script type='text/javascript'> document.write(cash_balance); </script>";
+            $cash_balance = (float) $cash_balance;
 
-        if ($cash_balance == 0.0 || is_null($cash_balance)) {
-            $cash_balance = 10000;
+            if ($cash_balance == 0.0 || is_null($cash_balance)) {
+                $cash_balance = 10000.0;
+            }
         }
         $this->credit($cash_balance);
     }
@@ -34,7 +37,7 @@ public class Portfolio {
         if (!array_key_exists($ticker, $this->securities)) {
             $new_position = new Security($ticker);
             $new_position->order($type, $date, $shares, $share_price, $commission);
-            array_push($this->securities, $ticker => $new_position);
+            array_push($this->securities[$ticker], $new_position);
         }
         else {
             $this->securities[$ticker]->order($type, $date, $shares, $share_price, $commission);
@@ -63,7 +66,29 @@ public class Portfolio {
     //     }
     // }
 
-    public function calculate_gain($include_dividends) {
+    public function calculate_gain($ticker = NULL, $include_dividends) {
+        if ($ticker != NULL) {
+            if (array_key_exists($ticker, $this->securities)) {
+                $current_price = $this->get_current_price($ticker);
+
+                $position = $this->securities[$ticker];
+                $num_shares = $position->shares_owned;
+                $cost_basis = $position->cost_basis;
+                $total_sale = $position->total_sale;
+
+                $ret = (($num_shares * $current_price) - $cost_basis + $total_sale);
+
+                if ($include_dividends) {
+                    foreach($position->dividends as $div) {
+                        $ret += $div;
+                    }
+                }
+
+                return number_format((float) $ret, 2, '.', '');
+            }
+            return 0.0;
+        }
+
         $ret = 0.0;
         foreach ($this->securities as $position) {
             $ret += $this->calculate_gain($position->ticker, $include_dividends);
@@ -71,40 +96,19 @@ public class Portfolio {
         return number_format((float) $ret, 2, '.', '');
     }
 
-    public function calculate_gain($ticker, $include_dividends) {
-        if (array_key_exists($ticker, $this->securities)) {
-            $current_price = $this->get_current_price($ticker);
-
-            $position = $this->securities[$ticker];
-            $num_shares = $position->shares_owned;
-            $cost_basis = $position->cost_basis;
-            $total_sale = $position->total_sale;
-
-            $ret = (($num_shares * $current_price) - $cost_basis + $total_sale);
-
-            if ($include_dividends) {
-                foreach($position->dividends as $div) {
-                    $ret += $div;
-                }
+    public function calculate_recogized_gain($ticker = NULL) {
+        if ($ticker != NULL) {
+            if (array_key_exists($ticker, $this->securities)) {
+                return $this->securities[$ticker]->recognized_gain;
             }
-
-            return number_format((float) $ret, 2, '.', '');
+            return 0.0;
         }
-        return 0.0;
-    }
 
-    public function calculate_recogized_gain() {
         $ret = 0.0;
         foreach ($this->securities as $position) {
             $ret += $this->calculate_recogized_gain($position->ticker);
         }
         return $ret;
-    }
-
-    public function calculate_recogized_gain($ticker) {
-        if (array_key_exists($ticker, $this->securities)) {
-            return $this->securities[$ticker]->recognized_gain;
-        }
     }
 
 }

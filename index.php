@@ -1,6 +1,6 @@
 <?php
 require 'Portfolio.php';
-global $my_portfolio = new Portfolio();
+$my_portfolio = new Portfolio();
 ?>
 
 <html>
@@ -9,13 +9,12 @@ global $my_portfolio = new Portfolio();
 </style>
 <head>
 	<!--Bootstrap CSS--><link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-	<link rel="stylesheet" href="resources/style.css">
 	<title>Portfolio Tracker</title>
 </head>
 <body>
 	<div class="container">
 		<div class="col-md-2">
-			<h3>Cash Balance: <?php echo($my_portfolio->$cash); ?></h3>
+			<h3>Cash Balance: <?php echo((string) $my_portfolio->cash); ?></h3>
 			<form method="post" id="cash_form">
 				<select name="debit_or_credit" form="cash_form">
 					<option value="credit">Credit</option>
@@ -46,8 +45,8 @@ global $my_portfolio = new Portfolio();
 				<div class="col-md-2">Total Value</div>
 				<div class="col-md-2">Total Gain</div>
 				<hr />
-				<?php foreach ($my_portfolio->securites as $position) {
-					?><div class"col-md-2"><?php echo($position->$ticker); ?></div><?php
+				<?php foreach ($my_portfolio->securities as $position) {
+					?><div class"col-md-2"><?php echo($position->ticker); ?></div><?php
 					?><div class"col-md-2"><?php echo($position->get_dividend_total()); ?></div><?php
 					?><div class"col-md-2">
 						<form method="post" id="current_price_form">
@@ -56,7 +55,7 @@ global $my_portfolio = new Portfolio();
 						<?php if (isset($_POST['curr_price'])) $position->set_current_price($_POST['curr_price']); ?>
 					</div><?php
 					?><div class"col-md-2"><?php echo($position->get_value()); ?></div><?php
-					?><div class"col-md-2"><?php echo($my_portfolio->calulate_gain($position->$ticker, TRUE)); ?></div><?php
+					?><div class"col-md-2"><?php echo($my_portfolio.calulate_gain($position->ticker, TRUE)); ?></div><?php
 				} ?>
 				<hr />
 				<form method="post" id="securites_form">
@@ -148,7 +147,7 @@ global $my_portfolio = new Portfolio();
 							}
 
 							if (!$error) {
-								$my_portfolio->pay_dividend($ticker, $date_output, $div_output);
+								$my_portfolio.pay_dividend($ticker, $date_output, $div_output);
 							}
 						}
 						else {
@@ -194,7 +193,7 @@ global $my_portfolio = new Portfolio();
 							}
 
 							if (!$error) {
-								$my_portfolio->security_transaction($ticker, $date_output, $trans_type, $num_shares, $share_price, $commission);
+								$my_portfolio.security_transaction($ticker, $date_output, $trans_type, $num_shares, $share_price, $commission);
 							}
 						}
 					}

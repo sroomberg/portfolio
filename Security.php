@@ -1,6 +1,6 @@
 <?php
 
-public class Security {
+class Security {
     public $ticker;
     public $shares_owned;
     public $shares_sold;
@@ -95,13 +95,15 @@ public class Security {
     //     return $ret;
     // }
 
-    private class Transaction {
-        public $type;       // String BUY, SELL, DIV
-        public $date;       // String date variable
-        public $amount;     // floating point amount of transaction
-        public $num_shares; // integer number of shares bought or sold
-        public $commission; // floating point amount of commission
-    }
+
+}
+
+class Transaction {
+    public $type;       // String BUY, SELL, DIV
+    public $date;       // String date variable
+    public $amount;     // floating point amount of transaction
+    public $num_shares; // integer number of shares bought or sold
+    public $commission; // floating point amount of commission
 }
 
 ?>
