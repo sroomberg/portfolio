@@ -1,6 +1,15 @@
 <?php
+session_start();
 require 'Portfolio.php';
-$my_portfolio = new Portfolio();
+
+if (isset($_SESSION['my_portfolio'])) {
+	$my_portfolio = $_SESSION['my_portfolio'];
+}
+else {
+	$my_portfolio = new Portfolio();
+	$_SESSION['my_portfolio'] = $my_portfolio;
+}
+
 ?>
 
 <html>
@@ -25,6 +34,7 @@ $my_portfolio = new Portfolio();
 			</form>
 			<?php
 			if (isset($_POST['cash_submit'])) {
+				$_SESSION['my_portfolio'] = $my_portfolio;
 				if (isset($_POST['dc_amount']) && $_POST['dc_amount'] != 0.0) {
 					if ($_POST['debit_or_credit'] == 'credit') {
 						$my_portfolio->credit($_POST['dc_amount']);
@@ -87,6 +97,7 @@ $my_portfolio = new Portfolio();
 					<input type="submit" name="securites_submit">
 				</form>
 				<?php if (isset($_POST['securites_submit'])) {
+					$_SESSION['my_portfolio'] = $my_portfolio;
 					$error = FALSE;
 					if (isset($_POST['date'])) {
 						// parse date
