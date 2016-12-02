@@ -1,14 +1,14 @@
 <?php
-session_start();
-// session_unset();
 require 'Portfolio.php';
 
+session_start();
 if (isset($_SESSION['my_portfolio'])) {
-	$my_portfolio = $_SESSION['my_portfolio'];
+	$my_portfolio = unserialize($_SESSION['my_portfolio']);
+	echo('my_portfolio exists');
 }
 else {
 	$my_portfolio = new Portfolio();
-	$_SESSION['my_portfolio'] = $my_portfolio;
+	echo('init my_portfolio');
 }
 
 ?>
@@ -35,7 +35,6 @@ else {
 			</form>
 			<?php
 			if (isset($_POST['cash_submit'])) {
-				$_SESSION['my_portfolio'] = $my_portfolio;
 				if (isset($_POST['dc_amount']) && $_POST['dc_amount'] != 0.0) {
 					if ($_POST['debit_or_credit'] == 'credit') {
 						$my_portfolio->credit($_POST['dc_amount']);
@@ -44,29 +43,34 @@ else {
 						$my_portfolio->debit($_POST['dc_amount']);
 					}
 				}
+				$_SESSION['my_portfolio'] = serialize($my_portfolio);
 			}
 			?>
 		</div>
 		<div class="col-md-8">
 			<div id="securites_table">
-				<div class="col-md-2">Ticker</div>
-				<div class="col-md-2">Dividends</div>
-				<div class="col-md-2">Units Owned</div>
-				<div class="col-md-2">Unit Price</div>
-				<div class="col-md-2">Total Value</div>
-				<div class="col-md-2">Total Gain</div>
+				<div class="row">
+					<div class="col-md-2">Ticker</div>
+					<div class="col-md-2">Dividends</div>
+					<div class="col-md-2">Units Owned</div>
+					<div class="col-md-2">Unit Price</div>
+					<div class="col-md-2">Total Value</div>
+					<div class="col-md-2">Total Gain</div>
+				</div>				
 				<hr />
 				<?php foreach ($my_portfolio->securities as $position) {
-					?><div class"col-md-2"><?php echo($position->ticker); ?></div><?php
-					?><div class"col-md-2"><?php echo($position->get_dividend_total()); ?></div><?php
-					?><div class"col-md-2">
-						<form method="post" id="current_price_form">
-							<input type="number" name="curr_price">
-						</form>
-						<?php if (isset($_POST['curr_price'])) $position->set_current_price($_POST['curr_price']); ?>
-					</div><?php
-					?><div class"col-md-2"><?php echo($position->get_value()); ?></div><?php
-					?><div class"col-md-2"><?php echo($my_portfolio.calulate_gain($position->ticker, TRUE)); ?></div><?php
+					?><div class="row"><?php
+						?><div class"col-md-2"><?php echo($position->ticker); ?></div><?php
+						?><div class"col-md-2"><?php echo($position->get_dividend_total()); ?></div><?php
+						?><div class"col-md-2">
+							<form method="post" id="current_price_form">
+								<input type="number" name="curr_price">
+							</form>
+							<?php if (isset($_POST['curr_price'])) $position->set_current_price($_POST['curr_price']); ?>
+						</div><?php
+						?><div class"col-md-2"><?php echo($position->get_value()); ?></div><?php
+						?><div class"col-md-2"><?php echo($my_portfolio->calulate_gain($position->ticker, TRUE)); ?></div><?php
+					?></div><?php
 				} ?>
 				<hr />
 				<form method="post" id="securites_form">
@@ -98,7 +102,6 @@ else {
 					<input type="submit" name="securites_submit">
 				</form>
 				<?php if (isset($_POST['securites_submit'])) {
-					$_SESSION['my_portfolio'] = $my_portfolio;
 					$error = FALSE;
 					if (isset($_POST['date'])) {
 						// parse date
@@ -159,7 +162,7 @@ else {
 							}
 
 							if (!$error) {
-								$my_portfolio.pay_dividend($ticker, $date_output, $div_output);
+								$my_portfolio->pay_dividend($ticker, $date_output, $div_output);
 							}
 						}
 						else {
@@ -205,10 +208,11 @@ else {
 							}
 
 							if (!$error) {
-								$my_portfolio.security_transaction($ticker, $date_output, $trans_type, $num_shares, $share_price, $commission);
+								$my_portfolio->security_transaction($ticker, $date_output, $trans_type, $num_shares, $share_price, $commission);
 							}
 						}
 					}
+					$_SESSION['my_portfolio'] = serialize($my_portfolio);
 				} ?>
 			</div>
 		</div>
