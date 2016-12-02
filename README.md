@@ -1,10 +1,16 @@
 ## Equity Portfolio Tracker
 
-This is an <em>unfinished</em> stock portfolio tracker. Developed entirely in PHP, you can easily, and automatically calculate gain in your portfolio.
+This is an <em>unfinished</em> and <em>currently non-functional</em> stock portfolio tracker. Developed entirely in PHP, you can easily, and automatically calculate gain in your portfolio.
 
-Currently, there is no way to save data when you exit the program. This feature will be implemented at a later time.
+To save information, I implemented PHP Sessions. Each time a transaction is recorded, the page refreshes and Sessions allows you not to lose your data.
 
 To use, you must run this project on a server (localhost or remote).
+
+## Current Problems
+
+Users cannot enter a starting balance and therefore has a starting balance of $10,000.00.
+
+If you run the code on your server, you'll notice the page is not styled at all.
 
 ## Future Plans
 
