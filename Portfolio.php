@@ -8,20 +8,29 @@ class Portfolio {
     public $securities_balance;
     public $total_balance;
 
-    public function __construct($cash_amount = NULL) {
-        if (is_null($cash_amount)) {
-            echo(
-                "<script type='text/javascript'>
-                    var cash_balance = prompt('Please enter a starting balance (default value is $10,000):');
-                </script>
-            ");
-            $cash_balance = "<script type='text/javascript'> document.write(cash_balance); </script>";
-            $cash_balance = (float) $cash_balance;
-            if ($cash_balance == 0.0 || is_null($cash_balance)) {
-                $cash_balance = 10000.0;
-            }
-        }
-        $this->credit($cash_balance);
+    public function __construct($cash_amount = 10000.00) {
+        // Couldn't get a user-specified initial cash balance to work correctly so each new portfolio has
+        // a default initial cash balance of $10,000.00.
+        
+        // if (is_null($cash_amount)) {
+        //     $cash_amount = fopen('php://stdin', 'r');
+        //     echo('Enter beginning balance: ');
+        //     $cash_balance = (float) fgets($cash_amount);
+
+        //     // echo(
+        //     //     "<script type='text/javascript'>
+        //     //         var cash_balance = prompt('Please enter a starting balance (default value is $10,000):');
+        //     //     </script>
+        //     // ");
+        //     // $cash_balance = (string) "<script type='text/javascript'> document.write(cash_balance); </script>";
+        //     print_r($cash_balance.' '.gettype($cash_balance).'<br />');
+        //     // $cash_balance = (float) $cash_balance;
+        //     // print_r($cash_balance.' '.gettype($cash_balance).'<br />');
+        //     if ($cash_balance == 0.0 || is_null($cash_balance)) {
+        //         $cash_balance = 10000.0;
+        //     }
+        // }
+        $this->credit($cash_amount);
     }
 
     public function credit($amount) {
@@ -32,6 +41,7 @@ class Portfolio {
         $this->cash -= $amount;
     }
 
+    // Whether a transaction is a buy or sell is dealt with inside the Security object you are modifying
     public function security_transaction($ticker, $date, $type, $shares, $share_price, $commission) {
         if (!array_key_exists($ticker, $this->securities)) {
             $new_position = new Security($ticker);

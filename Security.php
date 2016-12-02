@@ -12,14 +12,14 @@ class Security {
     public $recognized_gain;
 
     public function __construct($a_ticker) {
-        $this->ticker = $a_ticker;
-        $this->shares_owned = 0;
-        $this->cost_basis = 0.0;
-        $this->total_sale = 0.0;
-        $this->dividends = array();
-        $this->transactions = array();
-        $this->current_price = 0.0;
-        $this->recognized_gain = 0.0;
+        $this->ticker = $a_ticker;      // stock ticker
+        $this->shares_owned = 0;        // number of shares currently owned
+        $this->cost_basis = 0.0;        // total cost basis
+        $this->total_sale = 0.0;        // total sale
+        $this->dividends = array();     // array of Transaction objects tracking dividends
+        $this->transactions = array();  // array of Transaction objects tracking BUYs and SELLs
+        $this->current_price = 0.0;     // current unit price of the security
+        $this->recognized_gain = 0.0;   // tax recognizable gain of position
     }
 
     public function order($trans_type, $date, $num_shares, $share_price, $commission) {
@@ -98,6 +98,7 @@ class Security {
 
 }
 
+// Class used to keep track of the transactions owned by each security
 class Transaction {
     public $type;       // String BUY, SELL, DIV
     public $date;       // String date variable

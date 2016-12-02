@@ -1,14 +1,16 @@
 <?php
 require 'Portfolio.php';
 
+// Using PHP sessions to store portfolio without needing a database or separate file (json, etc.).
+// Each time a submit button is pressed, the page refreshes and the portfolio data needs to be stored.
 session_start();
 if (isset($_SESSION['my_portfolio'])) {
 	$my_portfolio = unserialize($_SESSION['my_portfolio']);
-	echo('my_portfolio exists');
+	// print_r('my_portfolio exists');
 }
 else {
 	$my_portfolio = new Portfolio();
-	echo('init my_portfolio');
+	// print_r('init my_portfolio');
 }
 
 ?>
@@ -23,9 +25,9 @@ else {
 </head>
 <body>
 	<div class="container">
-		<div class="col-md-2">
+		<div class="col-md-2"><!--Left-hand column displaying cash balance, debit/credit on account form-->
 			<h3>Cash Balance: <?php echo((string) $my_portfolio->cash); ?></h3>
-			<form method="post" id="cash_form">
+			<form method="post" id="cash_form"><!--Form used to credit/debit money on account-->
 				<select name="debit_or_credit" form="cash_form">
 					<option value="credit">Credit</option>
 					<option value="debit">Debit</option>
@@ -43,8 +45,9 @@ else {
 						$my_portfolio->debit($_POST['dc_amount']);
 					}
 				}
-				$_SESSION['my_portfolio'] = serialize($my_portfolio);
-			}
+				$_SESSION['my_portfolio'] = serialize($my_portfolio);	// After the cash balance is updated, serialize
+			}															// and store $my_portfolio in the session as the
+																		// page will refresh.
 			?>
 		</div>
 		<div class="col-md-8">
@@ -58,12 +61,13 @@ else {
 					<div class="col-md-2">Total Gain</div>
 				</div>				
 				<hr />
-				<?php foreach ($my_portfolio->securities as $position) {
-					?><div class="row"><?php
+				<?php foreach ($my_portfolio->securities as $position) {	// Loop through each position in the portfolio
+					?><div class="row"><?php 								// displaying key values of the position like
+																			// the ticker, dividends received, total gain, etc.
 						?><div class"col-md-2"><?php echo($position->ticker); ?></div><?php
 						?><div class"col-md-2"><?php echo($position->get_dividend_total()); ?></div><?php
 						?><div class"col-md-2">
-							<form method="post" id="current_price_form">
+							<form method="post" id="current_price_form"><!--Manually update the current share price of a stock-->
 								<input type="number" name="curr_price">
 							</form>
 							<?php if (isset($_POST['curr_price'])) $position->set_current_price($_POST['curr_price']); ?>
@@ -73,7 +77,7 @@ else {
 					?></div><?php
 				} ?>
 				<hr />
-				<form method="post" id="securites_form">
+				<form method="post" id="securites_form"><!--Add transaction to your positions or create a new one. This is modeled off of Google Finance.-->
 					<div id="securites_form_opt">Type:<br />
 						<select name="trans_type" form="securites_form">
 							<option value="buy">Buy</option>
@@ -103,7 +107,7 @@ else {
 				</form>
 				<?php if (isset($_POST['securites_submit'])) {
 					$error = FALSE;
-					if (isset($_POST['date'])) {
+					if (isset($_POST['date'])) {	// sanitize date
 						// parse date
 						$date_str = $_POST['date'];
 						$date_month = (int) substr($date_str, 0, 2);
@@ -142,7 +146,7 @@ else {
 						$date_output = $date_month.'/'.$date_day.'/'.$date_year;
 					}
 
-					if (isset($_POST['ticker'])) {
+					if (isset($_POST['ticker'])) {	// check for ticker
 						$ticker = $_POST['ticker'];
 					}
 					else {
@@ -150,9 +154,9 @@ else {
 						$error = TRUE;
 					}
 
-					if (!$error) {
-						if ($_POST['trans_type'] == 'dividend') {
-							$div_output = NULL;
+					if (!$error) {	// if no error thus far, continue to add position.
+						if ($_POST['trans_type'] == 'dividend') {	// A dividend transaction only requires a date, ticker,
+							$div_output = NULL;						// and dividend amount (total amount, not a per-share amount).
 							if ($_POST['div_amount'] > 0.0) {
 								$div_output = $_POST['div_amount'];
 							}
@@ -166,8 +170,8 @@ else {
 							}
 						}
 						else {
-							if ($_POST['trans_type'] == 'buy') {
-								$trans_type = 'BUY';
+							if ($_POST['trans_type'] == 'buy') {	// Buying and selling are managed inside the Portfolio class
+								$trans_type = 'BUY';				// function security_transaction.
 							}
 							else {
 								$trans_type = 'SELL';
@@ -197,9 +201,9 @@ else {
 								$error = TRUE;
 							}
 
-							if (isset($_POST['commssion'])) {
+							if (isset($_POST['commssion'])) {	// Commission defaults to $0.00, no error if not set
 								$commission = $_POST['commission'];
-								if ($commssion < 0) {
+								if ($commssion < 0) {			// Commission defaults to $0.00 if entered value is less than 0
 									$commssion = 0.0;
 								}
 							}
@@ -212,7 +216,9 @@ else {
 							}
 						}
 					}
-					$_SESSION['my_portfolio'] = serialize($my_portfolio);
+					$_SESSION['my_portfolio'] = serialize($my_portfolio);	// After the transaction is recorded, $my_portfolio is
+																			// serialized in order to be saved to the session for 
+																			// use as the page refreshes after this operation.
 				} ?>
 			</div>
 		</div>
