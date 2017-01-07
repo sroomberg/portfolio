@@ -1,14 +1,13 @@
 <?php
 
-public class Security {
-    private $ticker;
-    private $shares_owned;
-    private $shares_sold;
-    private $cost_basis;
-    private $total_sale;
-    private $dividends;
-    private $transactions;
-
+class Security {
+    public $ticker;
+    public $shares_owned;
+    public $shares_sold;
+    public $cost_basis;
+    public $total_sale;
+    public $dividends;
+    public $transactions;
     public $current_price;
     public $recognized_gain;
 
@@ -65,13 +64,46 @@ public class Security {
         array_push($dividends, $order);
     }
 
-    private class Transaction {
-        public $type;       // String BUY, SELL, DIV
-        public $date;       // String date variable
-        public $amount;     // floating point amount of transaction
-        public $num_shares; // integer number of shares bought or sold
-        public $commission; // floating point amount of commission
+    public function get_dividend_total() {
+        $ret = 0.0;
+        foreach($this->dividends as $div_order) {
+            $ret += $div_order->amount;
+        }
+        return $ret;
     }
+
+    public function set_current_price($amount) {
+        if ($amount < 0.0) {
+            $amount = 0.0;
+        }
+        $this->current_price = $amount;
+    }
+
+    public function get_value() {
+        return ($this->shares_sold * $this->$current_price);
+    }
+
+    // Used to write information to a txt file to save information for later
+    // public function to_string() {
+    //     $ret = '';
+    //     $ret .= $this->ticker;
+    //     $ret .= '\n';
+    //     $ret .= $this->$shares_owned . ' ' . $this->$shares_sold . ' ' . $this->$cost_basis . ' ' . 
+    //             $this->$total_sale . ' ' . $this->$current_price . ' ' . $this->$recognized_gain . '\n';
+    //     $ret .= $dividends;
+    //     $ret .= '\n***\n';
+    //     return $ret;
+    // }
+
+
+}
+
+class Transaction {
+    public $type;       // String BUY, SELL, DIV
+    public $date;       // String date variable
+    public $amount;     // floating point amount of transaction
+    public $num_shares; // integer number of shares bought or sold
+    public $commission; // floating point amount of commission
 }
 
 ?>
